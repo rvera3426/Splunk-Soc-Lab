@@ -106,7 +106,7 @@ Each triggered alert follows a documented response procedure:
 
 | Document | Description |
 |---|---|
-| [IR-2026-001 — SSH Brute Force Attack](Incident_Report_SSH_Brute_Force_20260601.pdf) | Full incident report covering detection, investigation, impact assessment, and remediation recommendations for a 2,334-attempt SSH brute force attack detected by Splunk |
+| [IR-2026-001 — SSH Brute Force Attack](Incident_Report_SSH_Brute_Force.pdf) | Full incident report covering detection, investigation, impact assessment, and remediation recommendations for a 2,334-attempt SSH brute force attack detected by Splunk |
 
 ---
 
