@@ -24,6 +24,14 @@ This lab deploys Splunk Enterprise SIEM to continuously monitor Windows and Linu
 
 ---
 
+## Dashboards
+
+![Splunk Dashboards](Screenshot%202026-06-10%20120637.png)
+
+Six custom dashboards built including **Security Overview** and **Successful Logins Over Time** for continuous monitoring visibility.
+
+---
+
 ## Detection Rules
 
 Four custom detection rules built, tested, and validated with scheduled alerts, severity classifications, and documented escalation criteria.
@@ -34,6 +42,35 @@ Four custom detection rules built, tested, and validated with scheduled alerts, 
 | Windows Failed Logins | Windows Security Event Log | Medium | 5+ Event ID 4625 within 5 min |
 | Account Lockout | Windows Security Event Log | High | Event ID 4740 detected |
 | Unauthorized Account Creation | Windows Security Event Log | Critical | Event ID 4720 outside approved hours |
+
+---
+
+## Detection Rule Screenshots
+
+### Brute Force SSH Detection
+SPL query identifying repeated failed SSH attempts by source IP across `/var/log/auth.log`.
+
+![Brute Force SSH Detection](Screenshot%202026-06-10%20120242.png)
+
+### Brute Force Attack — High Volume Visualization
+Column chart visualization showing failure vs. success counts per source IP — 6,791 failures detected from a single host.
+
+![Brute Force High Volume](Screenshot%202026-06-10%20120524.png)
+
+### Windows Failed Login Detection (Event ID 4625)
+Tracks failed Windows logins by account name — flagging accounts with more than 3 failures.
+
+![Windows Failed Login](Screenshot%202026-06-10%20120613.png)
+
+### Account Lockout Detected (Event ID 4740)
+Captures lockout events with account name and caller computer name — enabling rapid pivot to source workstation.
+
+![Account Lockout](Screenshot%202026-06-10%20120601.png)
+
+### New User Account Created (Event ID 4720)
+Detects unauthorized account creation events with timestamp, account name, and creating subject.
+
+![New User Account Created](Screenshot%202026-06-10%20120541.png)
 
 ---
 
@@ -52,16 +89,16 @@ Each triggered alert follows a documented response procedure:
 ## Sample Investigations
 
 ### SSH Brute Force — Linux Host
-- **Alert triggered:** 12 failed SSH attempts from `192.168.1.45` within 3 minutes
+- **Alert triggered:** 12 failed SSH attempts from `192.168.100.128` within 3 minutes
 - **Investigation:** Pivoted to auth.log — all attempts targeting root account, consistent timing suggesting automated tool
 - **Action:** Documented source IP, flagged for blocking, escalated per procedure
 - **Outcome:** Confirmed brute force attempt; no successful authentication
 
 ### Account Lockout — Windows Domain Controller
 - **Alert triggered:** Event ID 4740 for user `jsmith`
-- **Investigation:** Traced lockout source to workstation `WS-04`; correlated with 8x Event ID 4625 preceding lockout
+- **Investigation:** Traced lockout source to workstation `WKS01`; correlated with repeated Event ID 4625 preceding lockout
 - **Action:** Investigated whether credential stuffing or misconfigured service; documented findings
-- **Outcome:** Determined stale cached credentials on WS-04; resolved and documented
+- **Outcome:** Determined stale cached credentials on WKS01; resolved and documented
 
 ---
 
@@ -71,7 +108,7 @@ Conducted regular Nmap scans across all lab hosts to identify open ports, expose
 
 ```bash
 # Example: Full port scan with service version detection
-nmap -sV -p- 192.168.1.0/24
+nmap -sV -p- 192.168.100.0/24
 ```
 
 ---
